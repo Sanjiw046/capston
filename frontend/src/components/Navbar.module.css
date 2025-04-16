@@ -1,0 +1,103 @@
+/* General Navbar Styles */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 20px;
+    background: linear-gradient(to right, #7f00ff, #e100ff);
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+/* Logo */
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+    color: white;
+    text-transform: uppercase;
+}
+
+/* Navigation Menu */
+.navMenu {
+    display: flex;
+    list-style: none;
+    gap: 20px;
+    align-items: center;
+}
+
+.navMenu li {
+    position: relative;
+}
+
+/* Navigation Links */
+.navItem {
+    text-decoration: none;
+    font-size: 16px;
+    color: white;
+    font-weight: 500;
+    transition: color 0.3s ease, transform 0.2s ease;
+}
+
+.navItem:hover {
+    color: yellow;
+    transform: scale(1.1);
+}
+
+/* Cart Icon */
+.navItem svg {
+    font-size: 18px;
+    margin-right: 5px;
+}
+
+.cartCount {
+    background: red;
+    color: white;
+    font-size: 12px;
+    padding: 2px 6px;
+    border-radius: 50%;
+    position: absolute;
+    top: -5px;
+    right: -10px;
+}
+
+/* Mobile Menu Icon */
+.menuIcon {
+    display: none;
+    font-size: 28px;
+    color: white;
+    cursor: pointer;
+}
+
+/* Responsive Styles */
+@media screen and (max-width: 768px) {
+    .menuIcon {
+        display: block;
+    }
+
+    .navMenu {
+        position: absolute;
+        top: 60px;
+        right: 0;
+        background: #7f00ff;
+        flex-direction: column;
+        width: 200px;
+        height: auto;
+        box-shadow: -4px 4px 10px rgba(0, 0, 0, 0.2);
+        transform: translateX(100%);
+        transition: transform 0.3s ease-in-out;
+        padding: 15px 0;
+    }
+
+    .showMenu {
+        transform: translateX(0);
+    }
+
+    .navMenu li {
+        padding: 12px;
+        text-align: center;
+    }
+}

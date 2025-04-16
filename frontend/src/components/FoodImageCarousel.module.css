@@ -1,0 +1,46 @@
+/* Main Container */
+.restaurantContainer {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+  }
+  
+  /* Cover Image Section */
+  .coverImageContainer {
+    height: 70vh;
+    width: 100%;
+    overflow: hidden;
+  }
+  
+  .coverImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensures the image covers the full space */
+  }
+  
+  /* Restaurant Info Section */
+  .restaurantInfo {
+    height: 30vh; /* 30% of the screen height */
+    padding: 20px;
+    background-color: #fff; /* White background */
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Centers content vertically */
+    align-items: center; /* Centers content horizontally */
+    text-align: center;
+    box-shadow: 0 -5px 10px rgba(0, 0, 0, 0.1); /* Shadow effect */
+  }
+  
+  /* Text Styles */
+  .restaurantName {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .restaurantAddress,
+  .restaurantContact {
+    font-size: 1rem;
+    color: #555;
+  }
+  
