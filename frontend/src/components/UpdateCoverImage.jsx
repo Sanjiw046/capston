@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "../utils/axios";
+import { toast } from "react-toastify";
 
 const UpdateCoverImage = ({ restaurantName }) => {
   const [coverImage, setCoverImage] = useState(null);
@@ -12,7 +13,7 @@ const UpdateCoverImage = ({ restaurantName }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!coverImage) {
-      alert("Please select an image");
+      toast.error("Please select an image");
       return;
     }
 
@@ -26,11 +27,11 @@ const UpdateCoverImage = ({ restaurantName }) => {
       const response = await axios.post("/restaurant/update-coverImage", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      alert("Cover image updated successfully!");
+      toast.success("Cover image updated successfully!");
       console.log(response.data);
     } catch (error) {
       console.error("Error updating cover image:", error.response?.data?.message);
-      alert("Failed to update cover image.");
+      toast.error("Failed to update cover image.");
     } finally {
       setLoading(false);
     }

@@ -3,22 +3,26 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import axios from "../../utils/axios";
 import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { setDist } from "../../redux/Slices/distanceSlice"; // Adjust path if needed
+
 
 const Restaurant = ({ restaurant }) => {
   const [distance, setDistance] = useState(null);
   const [duration, setDuration] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const dispatch = useDispatch();
+
   //if available lat and lng in localstorage
 
   // ⬇️ Get user lat/lng from Redux
   const { lat: reduxLat, lng: reduxLng } = useSelector((state) => state.user);
 
-const lat = reduxLat ?? parseFloat(localStorage.getItem('userLat'));
-const lng = reduxLng ?? parseFloat(localStorage.getItem('userLng'));
+  const lat = reduxLat ?? parseFloat(localStorage.getItem('userLat'));
+  const lng = reduxLng ?? parseFloat(localStorage.getItem('userLng'));
 
   
-  console.log(lat,lng);
 
   const getDistance = async () => {
     try {
@@ -30,28 +34,45 @@ const lng = reduxLng ?? parseFloat(localStorage.getItem('userLng'));
           restaurantLng: restaurant.latAndLang?.[0]?.longitude,
         },
       });
-      console.log('rs',response.data)
-
+  
       const { distance_km: dist, duration_minutes: dur } = response.data;
+  
       setDistance(dist);
       setDuration(dur);
+  
+      // Store in Redux for future reuse
+      dispatch(setDist({
+        restaurantId: restaurant._id,
+        distance: dist,
+        duration: dur,
+        userLocation: { lat, lng },
+      }));
+  
     } catch (error) {
       console.error("Error fetching distance:", error);
     } finally {
       setLoading(false);
     }
   };
+  
+  const stored = useSelector((state) => state.distanceReducer.distances[restaurant._id]);
 
-  useEffect(() => {
-    if (
-      lat !== null &&
-      lng !== null &&
-      restaurant?.latAndLang?.[0]?.latitude &&
-      restaurant?.latAndLang?.[0]?.longitude
-    ) {
+useEffect(() => {
+  if (
+    lat != null && lng != null &&
+    restaurant?.latAndLang?.[0]?.latitude &&
+    restaurant?.latAndLang?.[0]?.longitude
+  ) {
+    if (stored && stored.userLocation.lat === lat && stored.userLocation.lng === lng) {
+      setDistance(stored.distance);
+      setDuration(stored.duration);
+      setLoading(false);
+    } else {
       getDistance();
     }
-  }, [lat, lng, restaurant]);
+  }
+}, [lat, lng, restaurant, stored]);
+
 
   return (
     <motion.div

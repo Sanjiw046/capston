@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "../utils/axios";
+import { toast } from "react-toastify";
 
 const UpdateName = ({ restaurantName }) => {
   const [newName, setNewName] = useState("");
@@ -13,7 +14,7 @@ const UpdateName = ({ restaurantName }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!newName) {
-      alert("Please enter a new restaurant name.");
+      toast.error("Please enter a new restaurant name.");
       return;
     }
 
@@ -25,11 +26,11 @@ const UpdateName = ({ restaurantName }) => {
         new_name: newName,
       });
 
-      alert("Restaurant name updated successfully!");
+      toast.success("Restaurant name updated successfully!");
       console.log(response.data);
     } catch (error) {
       console.error("Error updating restaurant name:", error.response?.data?.message);
-      alert("Failed to update restaurant name.");
+      toast.success("Failed to update restaurant name.");
     } finally {
       setLoading(false);
     }

@@ -9,6 +9,7 @@ import { act } from "react";
 //initial state
 // initial state
 const initialState = {
+    _id: '',
     name: '',
     email: '',
     username: '',
@@ -26,6 +27,7 @@ function userReducer(state = initialState, action) {
         case 'SET_USER':
             return {
                 ...state,
+                _id: action.payload._id,
                 name: action.payload.name,
                 email: action.payload.email,
                 username: action.payload.username,
@@ -60,7 +62,32 @@ function userReducer(state = initialState, action) {
                 return {
                     ...state,
                     cart: action.payload,
-                };    
+                };  
+                
+        case 'UPDATE_NAME':
+            return {
+                ...state,
+                name: action.payload,
+            };
+            
+        case 'UPDATE_EMAIL':
+            return {
+                ...state,
+                email: action.payload,
+            };
+
+            case 'UPDATE_IMAGE':
+                return {
+                  ...state,
+                  image: action.payload,
+                  isImageUpdating: false,
+                };
+          
+            case 'SET_IMAGE_UPDATING':
+                return {
+                  ...state,
+                  isImageUpdating: action.payload,
+                };
 
         default:
             return state;

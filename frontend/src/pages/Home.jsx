@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import AllRestaurant from '../components/Restaurant/AllRestaurant';
 import LandingPage from './LandingPage';
 import IsSellerPage from './IsSellerPage';
+import { toast } from 'react-toastify';
 
 
 const Home = () => {
@@ -18,7 +19,7 @@ const Home = () => {
                 dispatch({ type: 'SET_RESTAURANTS', payload: data.restaurant });
                 setIsRestaurantFetched(true);
             } catch (error) {
-                alert(error);
+                toast.error(error);
             }
         }
         getRestaurantDetails();

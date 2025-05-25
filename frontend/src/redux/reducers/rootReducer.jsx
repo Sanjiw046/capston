@@ -7,11 +7,12 @@
 import  userReducer  from "./userReducer";
 import restaurantReducer from "./restaurantReducer"
 import { combineReducers } from "redux";
-
+import distanceReducer from "../Slices/distanceSlice"
 // iske baad hum store.js me in sab ko store kar denge
 const rootReducer = combineReducers({
     user: userReducer,
-    restaurantReducer
+    restaurantReducer,
+    distanceReducer
 })
 
 export default rootReducer;

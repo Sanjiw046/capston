@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
+import { toast } from 'react-toastify';
 
 
 const FoodItem = ({ food, category, restaurantName }) => {
@@ -23,7 +24,7 @@ const FoodItem = ({ food, category, restaurantName }) => {
       dispatch({ type: "SET_CART", payload: data.data }); // or whatever your response returns
   
       // Optional: success toast/snackbar
-      alert("Item added to cart!");
+      toast.success("Item added to cart!");
     } catch (error) {
       alert(error.response?.data?.message || "Failed to add item to cart");
     }

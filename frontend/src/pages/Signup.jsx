@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import axios from "../utils/axios"; // Importing the Axios instance
+import { toast } from 'react-toastify';
 
 const Signup = () => {
     const [loading, setLoading] = useState(false);
@@ -25,11 +26,11 @@ const Signup = () => {
                     headers: { "Content-Type": "multipart/form-data" }
             });
 
-            alert("Signup successful!");
+            toast.success("Signup successful!");
             navigate("/login");
         } catch (error) {
             console.error("Signup error:", error.response?.data || error.message);
-            alert(error.response?.data?.message || "An error occurred during signup.");
+            toast.error(error.response?.data?.message || "An error occurred during signup.");
         } finally {
             setLoading(false);
         }

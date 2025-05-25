@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "../utils/axios";
+import { toast } from "react-toastify";
 
 const UpdateContact = ({ restaurantName }) => {
   const [newNumber, setNewNumber] = useState("");
@@ -16,7 +17,7 @@ const UpdateContact = ({ restaurantName }) => {
     e.preventDefault();
 
     if (!newNumber || newNumber.length !== 10) {
-      alert("Please enter a valid 10-digit contact number.");
+      toast.error("Please enter a valid 10-digit contact number.");
       return;
     }
 
@@ -28,12 +29,12 @@ const UpdateContact = ({ restaurantName }) => {
         new_number: newNumber,
       });
 
-      alert("Restaurant contact number updated successfully!");
+      toast.success("Restaurant contact number updated successfully!");
       console.log(response.data);
       setNewNumber(""); // Clear input after successful update
     } catch (error) {
       console.error("Error updating restaurant contact number:", error.response?.data?.message || error);
-      alert("Failed to update restaurant contact number.");
+      toast.error("Failed to update restaurant contact number.");
     } finally {
       setLoading(false);
     }

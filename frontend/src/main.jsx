@@ -5,6 +5,7 @@ import Navbar from './components/Navbar.jsx';
 import store from './redux/store/store.jsx';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
+import NotificationListener from './pages/NotificationListener.jsx';
 
 
 

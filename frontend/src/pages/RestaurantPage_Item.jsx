@@ -5,12 +5,17 @@ import FoodItem from "../components/FoodItem";
 import { useSearchParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import SellerFoodItem from "../components/Restaurant/SellerFoodItem";
+import { Link,useParams } from "react-router-dom";
+
 
 const RestaurantPage_Item = ({restaurant}) => {
     // console.log('restaurant',restaurant)
     const [cuisineCategory, setCuisineCategory] = useState("");
     const [cuisineFood, setCuisineFood] = useState([]);
     const userData = useSelector((state)=>state.user);
+    const restaurantId = restaurant?._id;
+    // console.log(restaurantId);
+
 
     useEffect(() => {
         const foodCategory = restaurant.cusines.find(
@@ -33,6 +38,21 @@ const RestaurantPage_Item = ({restaurant}) => {
                 imageUrl={restaurant.coverImage}
                 contact={restaurant.contact}
             />
+
+            {/* button for seller to see the all details */}
+            {userData.isLoggedIn && userData.userRole === "seller" &&(
+                <Link
+                    to={`/app/${restaurantId}/orders`}
+                    >
+                    <div className="flex justify-center text-center mb-4">
+                        <div className="bg-blue text-black rounded mt-4 px-4 py-2 bg-blue-600 hover:bg-blue-700 transition">
+                        All Orders
+                        </div>
+                    </div>
+                    
+                </Link>
+
+            )}
 
             {/* Cuisines Selection */}
             <div className="mt-6">

@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import axios from "../utils/axios";
 import { motion } from "framer-motion";
 import CuisineList from "../components/CuisineList";
+import { toast } from "react-toastify";
 
 const AddCuisine = () => {
   const navigate = useNavigate();
@@ -24,12 +25,12 @@ const AddCuisine = () => {
         restaurant_name: restaurantName,
       });
 
-      alert("Categories added successfully!");
+      toast.success("Categories added successfully!");
       setCategories(""); // Clear input after successful addition
       setRefreshKey((prevKey) => prevKey + 1); // Refresh the CuisineList
     } catch (error) {
       console.error("Error adding cuisines:", error.response?.data?.message || error.message);
-      alert("Failed to add cuisines.");
+      toast.error("Failed to add cuisines.");
     } finally {
       setLoading(false);
     }

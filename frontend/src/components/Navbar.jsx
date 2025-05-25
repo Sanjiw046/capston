@@ -5,6 +5,7 @@ import { FaBars, FaTimes, FaShoppingCart } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
 import ProfileImage from "./Profile/ProfileImage";
 import axios from "../utils/axios";
+import { toast } from "react-toastify";
 
 const Navbar = () => {
   const userData = useSelector((state) => state.user);
@@ -20,7 +21,7 @@ const Navbar = () => {
           dispatch({ type: "SET_USER", payload: data.user });
         }
       } catch (error) {
-        alert(error.response?.data?.message || "An error occurred");
+        toast.error(error.response?.data?.message || "An error occurred");
       }
     };
     
@@ -35,7 +36,7 @@ const Navbar = () => {
       
       navigate("/login");
     } catch (error) {
-      alert("Logout failed: " + (error.response?.data?.message || error.message));
+      toast.error("Logout failed: " + (error.response?.data?.message || error.message));
     }
   };
 
@@ -133,7 +134,8 @@ const Navbar = () => {
               Register Restaurant
             </NavLink>
           )}
-          {userData.isLoggedIn && (
+
+          {userData.isLoggedIn && userData.userRole === "buyer" &&(
             <NavLink
               to="/history"
               className={({ isActive }) =>
@@ -143,6 +145,7 @@ const Navbar = () => {
               History
             </NavLink>
           )}
+          
           {userData.isLoggedIn && (
             <button
               onClick={logoutHandler}

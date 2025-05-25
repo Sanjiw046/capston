@@ -1,15 +1,25 @@
-import React from "react";
+import React,{useState} from "react";
 import { useSelector } from "react-redux";
 import Restaurant from "./Restaurant";
 import Footer from "./Footer";
 import { motion } from "framer-motion";
+import axios from "../../utils/axios"; 
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+
 
 
 const AllRestaurant = () => {
     const restaurantData = useSelector(state => state.restaurantReducer);
     const userData = useSelector(state => state.user);
-    // console.log("resdata",userData);
+    const navigate = useNavigate();
 
+    // console.log("resdata",userData);
+    const [searchQuery, setSearchQuery] = useState("");
+    const [searchResults, setSearchResults] = useState([]);
+    const [isSearching, setIsSearching] = useState(false);
+    const [categoryRestaurants, setCategoryRestaurants] = useState([]);
+    const [selectedCategory, setSelectedCategory] = useState(null);
 
     // Category Data Array
     const categories = [
@@ -21,6 +31,49 @@ const AllRestaurant = () => {
         { name: "Paneer", src: "/categories/panner.png" },
         { name: "Roll", src: "/categories/roll.png" }
     ];
+
+    const handleSearch = async () => {
+        if (!searchQuery.trim()) return;
+    
+        setIsSearching(true);
+        try {
+            const { data } = await axios.get(`/restaurant/getReataurantByname?name=${searchQuery}`);
+            console.log(data);
+            if (data.success && data.restaurant.length > 0) {
+                setSearchResults(data.restaurant); 
+                
+                // Navigate to the first matched restaurant's page (assuming you have an id or slug)
+                const firstRestaurantId = data.restaurant[0]._id; // adjust field name if different
+                navigate(`/app/${firstRestaurantId}`);
+            } else {
+                toast.error("Restaurant not found.");
+                setSearchResults([]);
+            }
+        } catch (error) {
+            console.error("Error during search", error);
+            toast.error("Something went wrong. Please try again.");
+        }
+        setIsSearching(false);
+    };
+
+    // for seach category wise
+    const handleCategoryClick = async (category) => {
+        setSelectedCategory(category); // Show heading like "Pizza Restaurants"
+        try {
+            const { data } = await axios.get(`/restaurant/app/searchByFood?foodName=${category}`);
+            console.log('catrory:',data);
+            if (data.success && data.restaurants.length > 0) {
+                setCategoryRestaurants(data.restaurants);
+            } else {
+                setCategoryRestaurants([]); // Empty fallback
+                toast.error("No restaurants found for this category.");
+            }
+            console.log(categoryRestaurants);
+        } catch (error) {
+            console.error("Error fetching category restaurants", error);
+            toast.error("Something went wrong.");
+        }
+    };
 
     return (
         <div className="min-h-screen bg-cover bg-center bg-no-repeat py-10">
@@ -40,9 +93,15 @@ const AllRestaurant = () => {
                                 type="search" 
                                 className="bg-white opacity-80 w-56 sm:w-80 px-4 py-2 rounded-lg text-black focus:outline-none" 
                                 placeholder="Search for Restaurant"
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
                             />
-                            <button className="bg-yellow-500 text-white ml-2 px-4 py-2 rounded-lg hover:bg-yellow-600 transition duration-300">
-                                Search
+                            <button 
+                                className="bg-yellow-500 text-white ml-2 px-4 py-2 rounded-lg hover:bg-yellow-600 transition duration-300"
+                                onClick={handleSearch}
+                                disabled={isSearching}
+                            >
+                                {isSearching ? "Searching..." : "Search"}
                             </button>
                         </div>
 
@@ -90,13 +149,34 @@ const AllRestaurant = () => {
                         <div key={index} 
                             className="text-black py-2 bg-[#f8f8f8] px-3 rounded-lg shadow-md flex flex-col items-center w-24 sm:w-32 
                                        transition-all duration-300 border-2 border-transparent hover:border-blue-200 hover:bg-blue-100 
-                                       hover:scale-105 active:scale-95 cursor-pointer">
+                                       hover:scale-105 active:scale-95 cursor-pointer" 
+                                       onClick={() => handleCategoryClick(category.name)}>
                             <img className="w-20 h-20 transition-transform duration-300 group-hover:rotate-6" src={category.src} alt={category.name} />
                             <h6 className="text-xs text-center mt-1 transition-opacity duration-300 group-hover:opacity-80">{category.name}</h6>
                         </div>
                     ))}
                 </div>
             </div>
+
+            {/* for showing if click on any category */}
+            {selectedCategory && (
+                <div className="pt-4 mt-4">
+                    <div className="ml-4 mr-4 pl-4 pr-4">
+                        <h2 className="text-xl font-semibold">{selectedCategory} Restaurants</h2>
+                        <h5 className="!text-gray-600">Top results for {selectedCategory}</h5>
+                    </div>
+                    <div className="ml-4 mr-4 px-4 mt-2">
+                        <div className="px-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4">
+                            {categoryRestaurants.map((restaurant, index) => (
+                                <div key={index}>
+                                    <Restaurant restaurant={restaurant} />
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            )}
+
 
             {/* Restaurant List Section */}
             <div className="pt-4 mt-4">

@@ -5,6 +5,7 @@ import CartItem from "../components/Cart/CartItem";
 import { motion } from "framer-motion";
 import axios from "../utils/axios";
 import { useNavigate } from "react-router-dom";
+import socket from "../utils/socket";
 
 
 const Cart = () => {
@@ -22,20 +23,23 @@ const Cart = () => {
   const handleBuyNow = async () => {
     try {
       const res = await axios.post("/restaurant/cart/place-order", {}, {
-        withCredentials: true
+        withCredentials: true,
       });
-
-      // console.log('data:',res.data.order);
-      const newOrder = res.data.order; // Make sure backend sends this
   
-      dispatch({ type: 'ADD_ORDER_TO_HISTORY', payload: newOrder });
-      dispatch({ type: 'CLEAR_CART' });
+      const newOrder = res.data.order;
+  
+      dispatch({ type: "ADD_ORDER_TO_HISTORY", payload: newOrder });
+      dispatch({ type: "CLEAR_CART" });
+  
+      // Send order details to restaurant via socket
+      socket.emit("newOrderPlaced", newOrder);
   
       navigate("/history");
     } catch (error) {
       console.error("Error placing order:", error.response?.data?.message || error.message);
     }
   };
+  
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center py-10 px-4">

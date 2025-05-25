@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import axios from "../utils/axios";
+import { toast } from "react-toastify";
 
 const AddRestaurant = () => {
   const navigate = useNavigate();
@@ -40,13 +41,13 @@ const AddRestaurant = () => {
       await axios.post("/restaurant/register", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      alert("Restaurant added successfully!");
+      toast.success("Restaurant added successfully!");
       // navigate("/register-restaurant");
       navigate(`/add-cuisine?restaurant=${encodeURIComponent(restaurantData.name)}`);
     } 
     catch (error) {
       console.error("Error adding restaurant:", error.response.data.message);
-      alert("Failed to add restaurant.");
+      toast.error("Failed to add restaurant.");
     } 
     finally {
       setLoading(false);
