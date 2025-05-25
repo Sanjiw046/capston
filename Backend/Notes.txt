@@ -1,0 +1,7 @@
+.env file ko use karne k liye usee package.json ye "start": "nodemon --env-file=.env src/index.js" likh rakha hai isse hume 
+
+in the terminal (via npm start) to:
+
+Start the server (src/index.js).
+Load environment variables from the .env file.
+Automatically restart the server on code changes, making development easier and faster
