@@ -97,7 +97,7 @@ const Navbar = () => {
           )}
           {userData.isLoggedIn && userData.userRole === "buyer" && (
             <NavLink
-              to="/cart"
+              to="/app/cart"
               className={({ isActive }) =>
                 `relative nav-link transition-colors duration-300 ${
                   isActive ? "active" : ""

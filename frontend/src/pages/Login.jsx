@@ -44,7 +44,7 @@ const Login = () => {
                         }
                     });
 
-                    toast.success("Login successful with location!"); // ✅ Toast
+                    // toast.success("Login successful with location!"); // ✅ Toast
                     navigate('/app');
                 },
                 (error) => {

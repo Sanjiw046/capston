@@ -34,6 +34,7 @@ const OrderHistory = () => {
     // console.log(currentOrder);
     
     const handleStatusUpdate = async({ orderId, status }) => {
+      const normalizeStauts = status === 'pending' ? 'placed': status; 
       // console.log('orderStatusUpdate user');
       //   console.log(orderId);
       //   console.log(status);
@@ -43,10 +44,25 @@ const OrderHistory = () => {
     //       status: status === "pending" ? "placed" : status, // normalize "pending" to "placed"
     //     }));
     //   }
-        setCurrentOrders((prevOrder) => ({
-          ...prevOrder,
-          status: status === "pending" ? "placed" : status, // normalize "pending" to "placed"
-        }));
+        setCurrentOrders((prevOrders) => {
+          const updatedOrders = prevOrders.map((order) => {
+            if (order._id === orderId) {
+              // Found the order to update
+              return {
+                ...order,
+                status: normalizeStauts, // update the status
+              };
+            } else {
+              // Leave this order unchanged
+              return order;
+            }
+          });
+
+          return updatedOrders; // setCurrentOrders will use this
+        });
+        // console.log('id',orderId)
+        // console.log('orderhis: ',orderHistory);
+
         try {
           if(status=='pending'){
             status = 'placed';

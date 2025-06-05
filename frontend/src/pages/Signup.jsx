@@ -26,7 +26,7 @@ const Signup = () => {
                     headers: { "Content-Type": "multipart/form-data" }
             });
 
-            toast.success("Signup successful!");
+            // toast.success("Signup successful!");
             navigate("/login");
         } catch (error) {
             console.error("Signup error:", error.response?.data || error.message);

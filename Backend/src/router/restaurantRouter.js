@@ -36,7 +36,10 @@ import { postAddReview,
        
     } from "../controllers/cartControler.js";   
 
-    import {placeOrder,getOrdersByRestaurant, postUpdateStatusOrderDB } from '../controllers/orderControler.js';
+    import {placeOrder,
+        getOrdersByRestaurant, 
+        postUpdateStatusOrderDB, 
+    } from '../controllers/orderControler.js';
 
 const router = express.Router();
 import upload from '../utils/multer.js';
@@ -100,6 +103,7 @@ router.get('/get-review/:reviewId', getReview);
 router.get("/view-cart", getCartItems);
 router.get("/add-cart/:id", getAddCart);
 router.post("/cart/place-order",placeOrder);
+
 
 
 router.get('/app/orders/:restaurantId',getOrdersByRestaurant);

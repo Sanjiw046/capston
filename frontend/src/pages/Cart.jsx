@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import socket from "../utils/socket";
 
 
+
 const Cart = () => {
   const userData = useSelector((state) => state.user);
   const navigate = useNavigate();
@@ -22,23 +23,82 @@ const Cart = () => {
 
   const handleBuyNow = async () => {
     try {
-      const res = await axios.post("/restaurant/cart/place-order", {}, {
+      // console.log("Starting Buy Now Handler..."); // 1
+      // Step 1: Create payment order
+      const res = await axios.get("/cart/payment/create-razor-pay-orderInstance", {
         withCredentials: true,
       });
-  
-      const newOrder = res.data.order;
-  
-      dispatch({ type: "ADD_ORDER_TO_HISTORY", payload: newOrder });
-      dispatch({ type: "CLEAR_CART" });
-  
-      // Send order details to restaurant via socket
-      socket.emit("newOrderPlaced", newOrder);
-  
-      navigate("/history");
+
+      const paymentOrders = res.data.paymentOrders;
+      // console.log('paymentOrder:',paymentOrders);
+
+      for (const payment of paymentOrders) {
+        // console.log(import.meta.env.VITE_RAZORPAY_KEY_ID);
+        const options = {
+          // key: import.meta.env.VITE_RAZORPAY_KEY_ID, // Razorpay key from .env
+          key:"rzp_test_hbgmnTXMgF7tvG",
+          amount: payment.amount * 100,
+          currency: "INR",
+          name: payment.restaurantName,
+          method: 'upi',
+          description: "Food Order Payment",
+          order_id: payment.razorpayOrder.id,
+          handler: async function (response) {
+            try {
+              // console.log(response);
+              // Step 2: Verify payment
+              const verifyRes = await axios.post(
+                "/cart/payment/verify",
+                {
+                  razorpay_order_id: response.razorpay_order_id,
+                  razorpay_payment_id: response.razorpay_payment_id,
+                  razorpay_signature: response.razorpay_signature,
+                },
+                { withCredentials: true }
+              );
+              console.log('verifyres',verifyRes);
+
+              if (verifyRes.data.success) {
+                // Step 3: Place order only after successful payment
+                const placeOrderRes = await axios.post(
+                  "/restaurant/cart/place-order",
+                  {},
+                  { withCredentials: true }
+                );
+
+                const newOrder = placeOrderRes.data.order;
+
+                dispatch({ type: "ADD_ORDER_TO_HISTORY", payload: newOrder });
+                dispatch({ type: "CLEAR_CART" });
+
+                // Send order via socket
+                socket.emit("newOrderPlaced", newOrder);
+
+                navigate("/history");
+              }
+            } catch (verifyErr) {
+              console.error("Payment verification failed:", verifyErr);
+              alert("Payment verification failed. Please try again.");
+            }
+          },
+          prefill: {
+            name: userData.fullName,
+            email: userData.email,
+          },
+          theme: {
+            color: "#3399cc",
+          },
+        };
+
+        const razorpayInstance = new window.Razorpay(options);
+        razorpayInstance.open();
+      }
     } catch (error) {
-      console.error("Error placing order:", error.response?.data?.message || error.message);
+      console.error("Error in handleBuyNow:", error);
+      alert("Something went wrong while processing your payment.");
     }
   };
+
   
 
   return (

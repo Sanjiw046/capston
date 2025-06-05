@@ -14,6 +14,9 @@ import {postSignup,
     updateProfileImage,
     postUpdateStatusUserDB
      } from '../controllers/authController.js';
+
+     import { getCreatePaymentOrder, postVerifyPayment } from '../controllers/orderControler.js';
+
 import { userVeryfyJwt } from '../middlewares/userVeryfyJwt.js';
 
 //upload.single('image')  iska use hum single file ko upload karne me karte hai, image isliye kyuki db me bhi same name hai, jab postman se data k sath image bhejte hai to form kthrough bhejte hain, image ko upload karne k liye type ko text se hatakar file karna, form-data se sare req bhejna
@@ -43,5 +46,11 @@ router.post('/update/verifyEmailOTP',userVeryfyJwt,updateEmailOtpverify);
 
 //updater order status
 router.post('/update/order-status',userVeryfyJwt,postUpdateStatusUserDB);
+
+//razorpay k liye order instance create karne k liye
+router.get("/cart/payment/create-razor-pay-orderInstance",userVeryfyJwt,getCreatePaymentOrder);
+
+//for verify the payment
+router.post("/cart/payment/verify",postVerifyPayment)
 
 export default router;

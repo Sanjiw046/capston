@@ -66,7 +66,7 @@ function App() {
             </ProtectRoute>
           }
         />
-        <Route path="/cart" element={<Cart />} />
+        <Route path="/app/cart" element={<Cart />} />
         <Route path="/app/:restaurant_id" element={<RestaurantPage />} />
         <Route path="/restaurant/:restaurant_id/food/:id" element={<FoodDetails />} />
         <Route
