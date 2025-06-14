@@ -293,3 +293,13 @@ export const postVerifyPayment = ErrorWrapper(async(req,res,next)=>{
     message: 'payment verified successfully',
   })
 })
+
+var a =200;
+{
+  var a=100;
+}
+let b = a;
+{
+  b=400;
+}
+console.log(b);
